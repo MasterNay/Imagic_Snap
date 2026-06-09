@@ -1,0 +1,189 @@
+.wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-deep);
+}
+
+.title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-right: auto;
+}
+
+.jobId {
+  font-size: 10px;
+  color: var(--accent-gold);
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+}
+
+.downloadBtn {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  border: 1px solid var(--accent-electric);
+  color: var(--accent-electric);
+  text-decoration: none;
+  border-radius: 3px;
+  transition: all 0.15s;
+}
+
+.downloadBtn:hover {
+  background: var(--accent-electric);
+  color: var(--bg-void);
+}
+
+.canvas {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 400px;
+}
+
+/* Grid background */
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+.outputImage {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 60px rgba(0,0,0,0.8), 0 0 120px rgba(79,255,176,0.05);
+  animation: fadeInUp 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+/* Loading */
+.loadingOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.loadingInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.loadingRing {
+  width: 56px;
+  height: 56px;
+  border: 2px solid var(--bg-overlay);
+  border-top-color: var(--accent-electric);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  box-shadow: 0 0 20px rgba(79,255,176,0.2);
+}
+
+.loadingText {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--accent-electric);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.progressBar {
+  width: 160px;
+  height: 2px;
+  background: var(--bg-overlay);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--accent-electric);
+  border-radius: 1px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 8px var(--accent-electric);
+}
+
+.progressLabel {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* Empty state */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.emptyIcon {
+  font-size: 48px;
+  color: var(--text-muted);
+  opacity: 0.3;
+  filter: drop-shadow(0 0 16px rgba(79,255,176,0.1));
+}
+
+.emptyTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+}
+
+.emptyDesc {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.8;
+}
+
+/* Metadata */
+.metadata {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-deep);
+}
+
+.metaItem {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+.metaSep {
+  color: var(--text-muted);
+  opacity: 0.4;
+}

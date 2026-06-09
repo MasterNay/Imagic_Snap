@@ -1,0 +1,50 @@
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 24px;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-deep);
+  height: 36px;
+}
+
+.left, .center, .right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.checking { background: var(--accent-gold); animation: pulse-glow 1s infinite; }
+.online { background: var(--accent-electric); box-shadow: 0 0 6px var(--accent-electric); }
+.offline { background: var(--accent-hot); }
+
+.statusText {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.genStatus {
+  font-size: 11px;
+  color: var(--accent-electric);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.meta {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 700px) {
+  .right { display: none; }
+}

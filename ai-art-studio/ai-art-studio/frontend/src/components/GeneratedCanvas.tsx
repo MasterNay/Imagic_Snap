@@ -1,0 +1,107 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import styles from './GeneratedCanvas.module.css';
+
+interface Props {
+  generatedImage: string | null;
+  isGenerating: boolean;
+  jobId: string | null;
+}
+
+export default function GeneratedCanvas({ generatedImage, isGenerating, jobId }: Props) {
+  const [progress, setProgress] = useState(0);
+
+  // Fake progress animation during generation
+  useEffect(() => {
+    if (!isGenerating) {
+      setProgress(0);
+      return;
+    }
+
+    setProgress(5);
+    const iv = setInterval(() => {
+      setProgress((p) => {
+        if (p >= 90) { clearInterval(iv); return 90; }
+        return p + Math.random() * 8;
+      });
+    }, 400);
+
+    return () => clearInterval(iv);
+  }, [isGenerating]);
+
+  return (
+    <div className={styles.wrapper}>
+      {/* Header */}
+      <div className={styles.header}>
+        <span className={styles.title}>OUTPUT CANVAS</span>
+        {jobId && (
+          <span className={styles.jobId}>JOB {jobId.slice(0, 8).toUpperCase()}</span>
+        )}
+        {generatedImage && (
+          <a
+            className={styles.downloadBtn}
+            href={generatedImage}
+            download="ai-art-studio-output.png"
+          >
+            ↓ SAVE
+          </a>
+        )}
+      </div>
+
+      {/* Canvas area */}
+      <div className={styles.canvas}>
+        {/* Grid background */}
+        <div className={styles.grid} />
+
+        {/* Generated image */}
+        {generatedImage && !isGenerating && (
+          <img
+            src={generatedImage}
+            alt="AI Generated"
+            className={styles.outputImage}
+          />
+        )}
+
+        {/* Loading state */}
+        {isGenerating && (
+          <div className={styles.loadingOverlay}>
+            <div className={styles.loadingInner}>
+              <div className={styles.loadingRing} />
+              <div className={styles.loadingText}>GENERATING</div>
+              <div className={styles.progressBar}>
+                <div
+                  className={styles.progressFill}
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+              <div className={styles.progressLabel}>{Math.round(progress)}%</div>
+            </div>
+          </div>
+        )}
+
+        {/* Empty state */}
+        {!generatedImage && !isGenerating && (
+          <div className={styles.emptyState}>
+            <div className={styles.emptyIcon}>◈</div>
+            <div className={styles.emptyTitle}>Awaiting Generation</div>
+            <div className={styles.emptyDesc}>
+              Start the camera, configure params,<br />then press GENERATE
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Metadata strip */}
+      {generatedImage && (
+        <div className={styles.metadata}>
+          <span className={styles.metaItem}>512×512</span>
+          <span className={styles.metaSep}>·</span>
+          <span className={styles.metaItem}>PNG</span>
+          <span className={styles.metaSep}>·</span>
+          <span className={styles.metaItem}>COMPLETED</span>
+        </div>
+      )}
+    </div>
+  );
+}
