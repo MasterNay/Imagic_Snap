@@ -1,33 +1,36 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=Space+Mono&display=swap');
 
 :root {
-  --bg-void: #050508;
-  --bg-deep: #0a0a10;
-  --bg-surface: #111118;
-  --bg-raised: #18181f;
-  --bg-overlay: #1e1e28;
+  /* Ultra-refined Minimal Palette: White, Black, and Warm Browns */
+  --bg-void: #0B0A09;        /* Deepest warm charcoal black */
+  --bg-deep: #12110F;        /* Rich dark espresso black */
+  --bg-surface: #1B1917;     /* Warm dark charcoal/brown */
+  --bg-raised: #262320;      /* Dark sand clay */
+  --bg-overlay: #332F2B;     /* Muted cocoa brown */
 
-  --accent-electric: #4fffb0;
-  --accent-hot: #ff4fd8;
-  --accent-gold: #ffd166;
-  --accent-cyan: #00d4ff;
+  --accent-electric: #D4C3B3; /* Premium warm ivory / sand beige */
+  --accent-hot: #A88C74;      /* Mid-tone elegant camel brown */
+  --accent-gold: #C5A880;     /* Refined golden bronze */
+  --accent-cyan: #FAF9F6;     /* Alabaster off-white */
+  --accent-brown: #5E503F;    /* Rich coffee brown */
 
-  --text-primary: #e8e8f0;
-  --text-secondary: #8888a8;
-  --text-muted: #44445a;
+  --text-primary: #FAF9F6;    /* Pure warm white */
+  --text-secondary: #C8C2BC;  /* Soft warm grey/beige */
+  --text-muted: #7E756C;      /* Muted sandy soil */
 
-  --border-subtle: rgba(255,255,255,0.06);
-  --border-glow: rgba(79,255,176,0.25);
+  --border-subtle: rgba(212, 195, 179, 0.12); /* Subtle sand outline */
+  --border-glow: rgba(212, 195, 179, 0.25);
 
-  --font-display: 'Syne', sans-serif;
+  --font-display: 'Cormorant Garamond', serif;
   --font-mono: 'Space Mono', monospace;
+  --font-sans: 'Inter', sans-serif;
 
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 16px;
+  --radius-sm: 2px; /* Very sharp, minimal corners */
+  --radius-md: 4px;
+  --radius-lg: 8px;
 
-  --glow-green: 0 0 20px rgba(79,255,176,0.3), 0 0 60px rgba(79,255,176,0.1);
-  --glow-pink: 0 0 20px rgba(255,79,216,0.3), 0 0 60px rgba(255,79,216,0.1);
+  --glow-green: 0 4px 20px rgba(212, 195, 179, 0.15);
+  --glow-pink: 0 4px 20px rgba(168, 140, 116, 0.15);
 }
 
 *, *::before, *::after {
@@ -43,39 +46,24 @@ html {
 body {
   background: var(--bg-void);
   color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 14px;
-  line-height: 1.6;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
   overflow-x: hidden;
   min-height: 100vh;
-}
-
-/* Scanline overlay */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0,0,0,0.03) 2px,
-    rgba(0,0,0,0.03) 4px
-  );
-  pointer-events: none;
-  z-index: 9999;
+  letter-spacing: -0.01em;
 }
 
 /* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg-deep); }
-::-webkit-scrollbar-thumb { background: var(--bg-overlay); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent-electric); }
+::-webkit-scrollbar-thumb { background: var(--bg-raised); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-hot); }
 
 /* Selection */
 ::selection {
-  background: rgba(79,255,176,0.2);
-  color: var(--accent-electric);
+  background: rgba(212, 195, 179, 0.2);
+  color: var(--accent-cyan);
 }
 
 /* Utility */

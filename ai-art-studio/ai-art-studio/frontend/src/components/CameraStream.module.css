@@ -82,20 +82,10 @@
   opacity: 0.3;
 }
 
-/* Corner decorations */
+/* Corner decorations - Hidden in minimal design */
 .corner {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border-color: var(--accent-electric);
-  border-style: solid;
-  opacity: 0.5;
+  display: none;
 }
-
-.tl { top: 6px; left: 6px; border-width: 1px 0 0 1px; }
-.tr { top: 6px; right: 6px; border-width: 1px 1px 0 0; }
-.bl { bottom: 6px; left: 6px; border-width: 0 0 1px 1px; }
-.br { bottom: 6px; right: 6px; border-width: 0 1px 1px 0; }
 
 /* Device row */
 .deviceRow {
@@ -117,7 +107,7 @@
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   color: var(--text-primary);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 11px;
   padding: 4px 8px;
   cursor: pointer;
@@ -125,15 +115,15 @@
 
 .select:focus {
   outline: none;
-  border-color: var(--accent-electric);
+  border-color: var(--accent-hot);
 }
 
 /* Error */
 .error {
   font-size: 11px;
   color: var(--accent-hot);
-  background: rgba(255,79,216,0.08);
-  border: 1px solid rgba(255,79,216,0.2);
+  background: rgba(168, 140, 116, 0.08);
+  border: 1px solid rgba(168, 140, 116, 0.2);
   border-radius: var(--radius-sm);
   padding: 8px 10px;
 }
@@ -146,10 +136,10 @@
 
 .btnStart, .btnStop {
   flex: 1;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   padding: 10px;
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -158,21 +148,69 @@
 }
 
 .btnStart {
-  background: var(--accent-electric);
+  background: var(--text-primary);
   color: var(--bg-void);
 }
 
 .btnStart:hover {
-  box-shadow: var(--glow-green);
+  background: var(--accent-electric);
   transform: translateY(-1px);
 }
 
 .btnStop {
   background: transparent;
-  color: var(--accent-hot);
-  border: 1px solid var(--accent-hot);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
 }
 
 .btnStop:hover {
-  background: rgba(255,79,216,0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.btnGroup {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.btnCapture {
+  flex: 2;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: none;
+  background: var(--text-primary);
+  color: var(--bg-void);
+  transition: all 0.15s ease;
+}
+
+.btnCapture:hover {
+  background: var(--accent-electric);
+  transform: translateY(-1px);
+}
+
+.btnRetake {
+  flex: 2;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-secondary);
+  transition: all 0.15s ease;
+}
+
+.btnRetake:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  transform: translateY(-1px);
 }

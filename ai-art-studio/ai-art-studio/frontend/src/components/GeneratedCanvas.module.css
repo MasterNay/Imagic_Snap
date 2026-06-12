@@ -30,20 +30,22 @@
 }
 
 .downloadBtn {
+  font-family: var(--font-sans);
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   padding: 4px 10px;
-  border: 1px solid var(--accent-electric);
-  color: var(--accent-electric);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
   text-decoration: none;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   transition: all 0.15s;
 }
 
 .downloadBtn:hover {
-  background: var(--accent-electric);
+  background: var(--text-primary);
   color: var(--bg-void);
+  border-color: var(--text-primary);
 }
 
 .canvas {
@@ -72,7 +74,7 @@
   max-height: 100%;
   object-fit: contain;
   border-radius: var(--radius-md);
-  box-shadow: 0 0 60px rgba(0,0,0,0.8), 0 0 120px rgba(79,255,176,0.05);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
   animation: fadeInUp 0.3s ease;
   position: relative;
   z-index: 1;
@@ -96,21 +98,20 @@
 }
 
 .loadingRing {
-  width: 56px;
-  height: 56px;
+  width: 40px;
+  height: 40px;
   border: 2px solid var(--bg-overlay);
-  border-top-color: var(--accent-electric);
+  border-top-color: var(--accent-hot);
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  box-shadow: 0 0 20px rgba(79,255,176,0.2);
 }
 
 .loadingText {
+  font-family: var(--font-sans);
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: var(--accent-electric);
-  animation: pulse-glow 2s ease-in-out infinite;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
 }
 
 .progressBar {
@@ -123,10 +124,9 @@
 
 .progressFill {
   height: 100%;
-  background: var(--accent-electric);
+  background: var(--accent-hot);
   border-radius: 1px;
   transition: width 0.4s ease;
-  box-shadow: 0 0 8px var(--accent-electric);
 }
 
 .progressLabel {

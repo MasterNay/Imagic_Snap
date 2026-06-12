@@ -22,7 +22,7 @@ export default function Home() {
         </div>
         <div className={styles.headerMeta}>
           <span className={styles.badge}>ControlNet</span>
-          <span className={styles.badge}>SDXL</span>
+          <span className={styles.badge}>FLUX.1</span>
           <span className={styles.badge}>FastAPI</span>
         </div>
       </header>

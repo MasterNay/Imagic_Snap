@@ -57,7 +57,7 @@
 
 .select:focus, .input:focus {
   outline: none;
-  border-color: rgba(79,255,176,0.4);
+  border-color: var(--accent-hot);
 }
 
 .textarea {
@@ -76,7 +76,7 @@
 
 .textarea:focus {
   outline: none;
-  border-color: rgba(79,255,176,0.4);
+  border-color: var(--accent-hot);
 }
 
 /* Sliders */
@@ -100,8 +100,8 @@
 
 .sliderValue {
   font-size: 11px;
-  color: var(--accent-electric);
-  font-weight: 700;
+  color: var(--text-primary);
+  font-weight: 500;
   min-width: 36px;
   text-align: right;
 }
@@ -119,12 +119,12 @@
 
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: var(--accent-electric);
+  background: var(--text-primary);
   cursor: pointer;
-  box-shadow: 0 0 6px var(--accent-electric);
+  box-shadow: none;
   transition: transform 0.1s;
 }
 
@@ -141,12 +141,12 @@
 
 .btnGenerate {
   flex: 1;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   padding: 12px;
-  background: var(--accent-electric);
+  background: var(--text-primary);
   color: var(--bg-void);
   border: none;
   border-radius: var(--radius-sm);
@@ -159,7 +159,7 @@
 }
 
 .btnGenerate:hover:not(:disabled) {
-  box-shadow: var(--glow-green);
+  background: var(--accent-electric);
   transform: translateY(-1px);
 }
 
@@ -169,10 +169,10 @@
 }
 
 .btnLive {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   padding: 12px 14px;
   background: transparent;
   color: var(--text-secondary);
@@ -184,10 +184,9 @@
 }
 
 .btnLive.liveActive {
-  color: var(--accent-hot);
+  color: var(--text-primary);
   border-color: var(--accent-hot);
-  background: rgba(255,79,216,0.08);
-  animation: pulse-glow 2s ease-in-out infinite;
+  background: rgba(168, 140, 116, 0.1);
 }
 
 .btnLive:disabled {
@@ -210,4 +209,122 @@
   color: var(--text-muted);
   text-align: center;
   padding: 4px 0;
+}
+
+/* Style Grid */
+.styleGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.styleCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.styleCard:hover:not(:disabled) {
+  border-color: rgba(212, 195, 179, 0.4);
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.styleCardActive {
+  background: rgba(212, 195, 179, 0.04) !important;
+  border-color: var(--accent-electric) !important;
+}
+
+.styleEmoji {
+  font-size: 24px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.styleInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.styleNameTh {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.styleName {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+.selectedCheck {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent-gold);
+  font-family: var(--font-sans);
+}
+
+/* Collapsible Advanced Settings */
+.advancedWrapper {
+  margin-top: 8px;
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: 12px;
+}
+
+.btnAdvancedToggle {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 6px 0;
+  transition: color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.btnAdvancedToggle:hover {
+  color: var(--text-secondary);
+}
+
+.advancedContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  animation: slide-down 0.2s ease-out;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

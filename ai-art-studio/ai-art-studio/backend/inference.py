@@ -1,149 +1,63 @@
 """
-inference.py — ControlNet + SDXL/SD1.5 Inference Engine
-Uses Hugging Face Diffusers library.
+inference.py — Replicate API backend
+Replaces the local Diffusers engine with Replicate-hosted ControlNet models.
+No GPU required on the server — inference runs on Replicate's cloud.
 """
 
 import io
+import base64
 import logging
+import urllib.request
 from typing import Optional
-
-import numpy as np
-import torch
-from PIL import Image
 
 logger = logging.getLogger("inference")
 
-# ── ControlNet model IDs ───────────────────────────────────────────────────
-CONTROLNET_IDS = {
+# ── Replicate model versions ───────────────────────────────────────────────
+# Each entry is the full "owner/model:version" string from replicate.com
+REPLICATE_MODELS = {
     "sdxl": {
-        "canny": "diffusers/controlnet-canny-sdxl-1.0",
-        "depth": "diffusers/controlnet-depth-sdxl-1.0",
-        "pose":  "thibaud/controlnet-openpose-sdxl-1.0",
-        "hed":   "SargeZT/controlnet-sd-xl-1.0-softedge-dexined",
-        "normal":"xinsir/controlnet-union-sdxl-1.0",
+        "canny":  "lucataco/sdxl-controlnet:06d6fae3b75ab68a28cd2900afa6033166910dd09fd1797644cc5f68e4fe6f4b",
+        "depth":  "lucataco/sdxl-controlnet:06d6fae3b75ab68a28cd2900afa6033166910dd09fd1797644cc5f68e4fe6f4b",
+        "pose":   "lucataco/sdxl-controlnet:06d6fae3b75ab68a28cd2900afa6033166910dd09fd1797644cc5f68e4fe6f4b",
+        "hed":    "lucataco/sdxl-controlnet:06d6fae3b75ab68a28cd2900afa6033166910dd09fd1797644cc5f68e4fe6f4b",
+        "normal": "lucataco/sdxl-controlnet:06d6fae3b75ab68a28cd2900afa6033166910dd09fd1797644cc5f68e4fe6f4b",
     },
     "sd15": {
-        "canny": "lllyasviel/sd-controlnet-canny",
-        "depth": "lllyasviel/sd-controlnet-depth",
-        "pose":  "lllyasviel/sd-controlnet-openpose",
-        "hed":   "lllyasviel/sd-controlnet-hed",
-        "normal":"lllyasviel/sd-controlnet-normal",
+        "canny":  "jagilley/controlnet-canny:aff48af9c68d162388d230a2ab003f68d2638d88307bdaf1c2f1ac95079c9613",
+        "depth":  "jagilley/controlnet-depth2img:922c7bb67b87ec32cbe86d21f0e48af3f37fbd56e8cb5adcbb5f74e75f5ef7b",
+        "pose":   "jagilley/controlnet-pose:269a616c8b0c2bbc12fc15fd51bb202b11e94ff0f7786c026aa905305c4ed9fb",
+        "hed":    "jagilley/controlnet-hed:cde353130c86f37d0af4060cd757ab3009cac68eb58df216768f907f0d0a0653",
+        "normal": "jagilley/controlnet-normal:cc8066f617b6c99fdb134bc1195c5291cf2610875da4985a39de50ee1f46d81c",
     },
 }
 
-BASE_MODEL_IDS = {
-    "sdxl": "stabilityai/stable-diffusion-xl-base-1.0",
-    "sd15": "runwayml/stable-diffusion-v1-5",
+# controlnet_type value expected by the sdxl model for each mode
+SDXL_CONTROLNET_TYPE = {
+    "canny":  "canny",
+    "depth":  "depth",
+    "pose":   "openpose",
+    "hed":    "softedge",
+    "normal": "normal",
 }
 
 
 class InferenceEngine:
     def __init__(self):
         self.is_loaded = False
-        self._pipelines: dict[str, object] = {}  # "sdxl_canny" → pipeline
-        self._preprocessors: dict[str, object] = {}
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.dtype = torch.float16 if self.device == "cuda" else torch.float32
-        logger.info(f"Device: {self.device} | dtype: {self.dtype}")
+        self._client = None
 
     async def load(self):
-        """
-        Lazy-load: pipelines are loaded on first use to keep startup fast.
-        We pre-import libraries here to catch import errors early.
-        """
         try:
-            import diffusers  # noqa: F401
-            import controlnet_aux  # noqa: F401
+            import replicate  # noqa: F401
             self.is_loaded = True
-            logger.info("Diffusers & controlnet_aux available ✓")
-        except ImportError as e:
-            logger.error(f"Missing dependency: {e}")
-            raise
+            logger.info("Replicate client ready ✓")
+        except ImportError:
+            raise ImportError(
+                "replicate package not found — run: pip install replicate"
+            )
 
     async def unload(self):
-        self._pipelines.clear()
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
         self.is_loaded = False
-
-    def _get_pipeline(self, model: str, control_mode: str):
-        """Load (and cache) the pipeline for model+mode combination."""
-        key = f"{model}_{control_mode}"
-        if key in self._pipelines:
-            return self._pipelines[key]
-
-        from diffusers import (
-            ControlNetModel,
-            StableDiffusionControlNetPipeline,
-            StableDiffusionXLControlNetPipeline,
-            UniPCMultistepScheduler,
-        )
-
-        controlnet_id = CONTROLNET_IDS[model][control_mode]
-        base_id = BASE_MODEL_IDS[model]
-
-        logger.info(f"Loading ControlNet: {controlnet_id}")
-        controlnet = ControlNetModel.from_pretrained(
-            controlnet_id,
-            torch_dtype=self.dtype,
-        )
-
-        logger.info(f"Loading base model: {base_id}")
-        if model == "sdxl":
-            pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
-                base_id,
-                controlnet=controlnet,
-                torch_dtype=self.dtype,
-                variant="fp16" if self.device == "cuda" else None,
-                use_safetensors=True,
-            )
-        else:
-            pipe = StableDiffusionControlNetPipeline.from_pretrained(
-                base_id,
-                controlnet=controlnet,
-                torch_dtype=self.dtype,
-                safety_checker=None,
-            )
-
-        pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
-        pipe = pipe.to(self.device)
-
-        if self.device == "cuda":
-            pipe.enable_xformers_memory_efficient_attention()
-            pipe.enable_model_cpu_offload()
-
-        self._pipelines[key] = pipe
-        return pipe
-
-    def _preprocess(self, image: Image.Image, control_mode: str) -> Image.Image:
-        """Apply ControlNet preprocessor to extract the control signal."""
-        from controlnet_aux import (
-            CannyDetector,
-            MidasDetector,
-            OpenposeDetector,
-            HEDdetector,
-            NormalBaeDetector,
-        )
-
-        preprocessors = {
-            "canny": CannyDetector,
-            "depth": MidasDetector,
-            "pose":  OpenposeDetector,
-            "hed":   HEDdetector,
-            "normal": NormalBaeDetector,
-        }
-
-        key = f"pre_{control_mode}"
-        if key not in self._preprocessors:
-            cls = preprocessors[control_mode]
-            self._preprocessors[key] = cls.from_pretrained("lllyasviel/Annotators") \
-                if hasattr(cls, "from_pretrained") else cls()
-
-        detector = self._preprocessors[key]
-
-        if control_mode == "canny":
-            return detector(image, low_threshold=100, high_threshold=200)
-        return detector(image)
 
     def generate(
         self,
@@ -157,40 +71,74 @@ class InferenceEngine:
         guidance_scale: float,
         seed: int,
     ) -> bytes:
-        """Run ControlNet inference and return PNG bytes."""
-        # Decode input image
-        input_image = Image.open(io.BytesIO(image_bytes)).convert("RGB").resize((512, 512))
+        """Call Replicate API and return PNG bytes of the result."""
+        import io
+        import replicate
 
-        # Preprocess to extract control signal
-        control_image = self._preprocess(input_image, control_mode)
+        # Wrap image bytes in a file-like BytesIO object. 
+        # The Replicate SDK automatically uploads file-like objects to their storage.
+        image_file = io.BytesIO(image_bytes)
+        image_file.seek(0)
 
-        # Load pipeline
-        pipe = self._get_pipeline(model, control_mode)
+        if model == "flux":
+            model_version = "black-forest-labs/flux-kontext-pro"
+            
+            inp = {
+                "prompt":             prompt,
+                "input_image":        image_file,  # Pass the BytesIO object
+                "aspect_ratio":       "match_input_image",
+                "output_format":      "jpg",
+                "safety_tolerance":   2,
+                "prompt_upsampling":  False,
+            }
+        elif model == "sdxl":
+            model_version = REPLICATE_MODELS[model][control_mode]
+            inp = {
+                "image":            image_file,
+                "prompt":           prompt,
+                "negative_prompt":  negative_prompt or "low quality, blurry",
+                "controlnet_type":  SDXL_CONTROLNET_TYPE[control_mode],
+                "condition_scale":  controlnet_conditioning_scale,
+                "num_inference_steps": num_inference_steps,
+                "guidance_scale":   guidance_scale,
+                "seed":             seed if seed >= 0 else None,
+            }
+        else:  # sd15
+            model_version = REPLICATE_MODELS[model][control_mode]
+            inp = {
+                "image":           image_file,
+                "prompt":          prompt,
+                "n_prompt":        negative_prompt or "low quality, blurry",
+                "ddim_steps":      num_inference_steps,
+                "scale":           guidance_scale,
+                "eta":             0.0,
+                "seed":            seed if seed >= 0 else None,
+                "image_resolution": 512,
+            }
 
-        # Set seed
-        generator = torch.Generator(device=self.device)
-        if seed >= 0:
-            generator.manual_seed(seed)
+        logger.info(f"Calling Replicate: {model_version.split(':')[0]}")
+
+        # replicate.run() blocks until the prediction completes
+        output = replicate.run(model_version, input=inp)
+
+        logger.info(f"Raw output type: {type(output)}, value: {output!r}")
+
+        # flux-kontext-pro returns a single FileOutput; other models return a list
+        if isinstance(output, list):
+            file_output = output[0]
         else:
-            generator.seed()
+            file_output = output
 
-        # Run inference
-        with torch.inference_mode():
-            result = pipe(
-                prompt=prompt,
-                negative_prompt=negative_prompt or "low quality, blurry",
-                image=control_image,
-                controlnet_conditioning_scale=controlnet_conditioning_scale,
-                num_inference_steps=num_inference_steps,
-                guidance_scale=guidance_scale,
-                generator=generator,
-                height=512,
-                width=512,
-            )
+        # FileOutput has a .url() method; fall back to str() for plain URL strings
+        if hasattr(file_output, 'url'):
+            result_url = file_output.url()
+        else:
+            result_url = str(file_output)
 
-        output_image: Image.Image = result.images[0]
+        logger.info(f"Result URL: {result_url}")
 
-        # Return as PNG bytes
-        buf = io.BytesIO()
-        output_image.save(buf, format="PNG")
-        return buf.getvalue()
+        # Download the result image
+        with urllib.request.urlopen(result_url) as resp:
+            image_bytes_out = resp.read()
+
+        return image_bytes_out

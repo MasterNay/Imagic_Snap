@@ -1,12 +1,14 @@
 """
-AI Art Studio — FastAPI Backend
-Handles generation jobs, queuing, and ControlNet inference dispatch.
+AI Art Studio — FastAPI Backend (Replicate edition)
+Inference is delegated to Replicate's API — no GPU needed on this server.
+Requires: REPLICATE_API_TOKEN environment variable.
 """
 
 import uuid
 import asyncio
 import base64
 import logging
+import os
 from contextlib import asynccontextmanager
 from typing import Optional
 
@@ -56,10 +58,10 @@ app.add_middleware(
 # ── Schemas ────────────────────────────────────────────────────────────────
 class GenerateRequest(BaseModel):
     image: str = Field(..., description="Base64-encoded JPEG/PNG control image (512×512)")
-    prompt: str = Field(..., max_length=500)
-    negative_prompt: str = Field(default="", max_length=300)
+    prompt: str = Field(..., max_length=2000)
+    negative_prompt: str = Field(default="", max_length=1000)
     control_mode: str = Field(default="canny", pattern="^(canny|depth|pose|hed|normal)$")
-    model: str = Field(default="sdxl", pattern="^(sdxl|sd15)$")
+    model: str = Field(default="sdxl", pattern="^(flux|sdxl|sd15)$")
     controlnet_conditioning_scale: float = Field(default=0.8, ge=0.0, le=2.0)
     num_inference_steps: int = Field(default=20, ge=5, le=50)
     guidance_scale: float = Field(default=7.5, ge=1.0, le=30.0)
@@ -81,9 +83,12 @@ class JobStatus(BaseModel):
 # ── Endpoints ──────────────────────────────────────────────────────────────
 @app.get("/health")
 async def health():
+    import os
+    token_set = bool(os.environ.get("REPLICATE_API_TOKEN"))
     return {
         "status": "ok",
         "engine_loaded": engine is not None and engine.is_loaded,
+        "replicate_token_set": token_set,
     }
 
 
@@ -120,7 +125,7 @@ async def delete_job(job_id: str):
 @app.get("/models")
 async def list_models():
     return {
-        "models": ["sdxl", "sd15"],
+        "models": ["flux", "sdxl", "sd15"],
         "controlnet_modes": ["canny", "depth", "pose", "hed", "normal"],
     }
 

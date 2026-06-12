@@ -20,29 +20,31 @@
   border-radius: 50%;
 }
 
-.checking { background: var(--accent-gold); animation: pulse-glow 1s infinite; }
-.online { background: var(--accent-electric); box-shadow: 0 0 6px var(--accent-electric); }
+.checking { background: var(--accent-hot); opacity: 0.7; }
+.online { background: var(--accent-gold); }
 .offline { background: var(--accent-hot); }
 
 .statusText {
+  font-family: var(--font-sans);
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
 }
 
 .genStatus {
+  font-family: var(--font-sans);
   font-size: 11px;
-  color: var(--accent-electric);
-  font-weight: 700;
+  color: var(--accent-gold);
+  font-weight: 500;
   letter-spacing: 0.05em;
-  animation: pulse-glow 2s ease-in-out infinite;
 }
 
 .meta {
+  font-family: var(--font-sans);
   font-size: 10px;
   color: var(--text-muted);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
 }
 
 @media (max-width: 700px) {

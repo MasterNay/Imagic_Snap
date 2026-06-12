@@ -53,11 +53,11 @@ export default function StatusBar({ isGenerating, jobId }: Props) {
       </div>
 
       <div className={styles.right}>
-        <span className={styles.meta}>SDXL + ControlNet</span>
+        <span className={styles.meta}>FLUX / SDXL + ControlNet</span>
         <span className={styles.meta}>·</span>
         <span className={styles.meta}>FastAPI Backend</span>
         <span className={styles.meta}>·</span>
-        <span className={styles.meta}>CF Pages</span>
+        <span className={styles.meta}>Studio Mode</span>
       </div>
     </footer>
   );

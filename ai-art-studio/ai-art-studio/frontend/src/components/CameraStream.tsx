@@ -15,7 +15,15 @@ export default function CameraStream() {
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string>('');
 
-  const { setFrameData, setIsStreaming } = useCameraStore();
+  const { 
+    frameData, 
+    setFrameData, 
+    setIsStreaming,
+    capturedImage,
+    isCaptured,
+    setCapturedImage,
+    setIsCaptured
+  } = useCameraStore();
 
   // List camera devices
   useEffect(() => {
@@ -49,6 +57,8 @@ export default function CameraStream() {
 
   const startCamera = useCallback(async () => {
     setError(null);
+    setCapturedImage(null);
+    setIsCaptured(false);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
@@ -74,16 +84,41 @@ export default function CameraStream() {
       const msg = err instanceof Error ? err.message : 'Camera access denied';
       setError(msg);
     }
-  }, [selectedDevice, captureFrame, setIsStreaming]);
+  }, [selectedDevice, captureFrame, setIsStreaming, setCapturedImage, setIsCaptured]);
 
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
     if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = null;
     setCameraActive(false);
     setIsStreaming(false);
     setFrameData(null);
-  }, [setIsStreaming, setFrameData]);
+    setCapturedImage(null);
+    setIsCaptured(false);
+  }, [setIsStreaming, setFrameData, setCapturedImage, setIsCaptured]);
+
+  const takePhoto = () => {
+    if (frameData) {
+      setCapturedImage(frameData);
+      setIsCaptured(true);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    }
+  };
+
+  const retakePhoto = () => {
+    setCapturedImage(null);
+    setIsCaptured(false);
+    if (videoRef.current) {
+      videoRef.current.play().catch((err) => console.warn("Failed to resume video:", err));
+    }
+    if (cameraActive && !intervalRef.current) {
+      intervalRef.current = setInterval(captureFrame, 200);
+    }
+  };
 
   useEffect(() => {
     return () => {
@@ -97,7 +132,7 @@ export default function CameraStream() {
         <span className={styles.sectionTitle}>INPUT STREAM</span>
         <div className={`${styles.indicator} ${cameraActive ? styles.active : ''}`}>
           <span className={styles.dot} />
-          {cameraActive ? 'LIVE' : 'IDLE'}
+          {cameraActive ? (isCaptured ? 'FROZEN' : 'LIVE') : 'OFFLINE'}
         </div>
       </div>
 
@@ -108,8 +143,15 @@ export default function CameraStream() {
           className={styles.video}
           muted
           playsInline
-          style={{ display: cameraActive ? 'block' : 'none' }}
+          style={{ display: cameraActive && !isCaptured ? 'block' : 'none' }}
         />
+        {isCaptured && capturedImage && (
+          <img
+            src={capturedImage}
+            alt="Captured Snapshot"
+            className={styles.video}
+          />
+        )}
         {!cameraActive && (
           <div className={styles.placeholder}>
             <span className={styles.placeholderIcon}>⬡</span>
@@ -155,9 +197,20 @@ export default function CameraStream() {
             ▶ START CAMERA
           </button>
         ) : (
-          <button className={styles.btnStop} onClick={stopCamera}>
-            ■ STOP CAMERA
-          </button>
+          <div className={styles.btnGroup}>
+            {!isCaptured ? (
+              <button className={styles.btnCapture} onClick={takePhoto}>
+                📸 SNAPSHOT (ถ่ายรูป)
+              </button>
+            ) : (
+              <button className={styles.btnRetake} onClick={retakePhoto}>
+                🔄 RETAKE (ถ่ายใหม่)
+              </button>
+            )}
+            <button className={styles.btnStop} onClick={stopCamera}>
+              ■ STOP CAMERA
+            </button>
+          </div>
         )}
       </div>
     </div>
