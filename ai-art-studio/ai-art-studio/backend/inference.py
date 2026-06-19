@@ -80,41 +80,13 @@ class InferenceEngine:
         image_file = io.BytesIO(image_bytes)
         image_file.seek(0)
 
-        if model == "flux":
-            model_version = "black-forest-labs/flux-kontext-pro"
-            
-            inp = {
-                "prompt":             prompt,
-                "input_image":        image_file,  # Pass the BytesIO object
-                "aspect_ratio":       "match_input_image",
-                "output_format":      "jpg",
-                "safety_tolerance":   2,
-                "prompt_upsampling":  False,
-            }
-        elif model == "sdxl":
-            model_version = REPLICATE_MODELS[model][control_mode]
-            inp = {
-                "image":            image_file,
-                "prompt":           prompt,
-                "negative_prompt":  negative_prompt or "low quality, blurry",
-                "controlnet_type":  SDXL_CONTROLNET_TYPE[control_mode],
-                "condition_scale":  controlnet_conditioning_scale,
-                "num_inference_steps": num_inference_steps,
-                "guidance_scale":   guidance_scale,
-                "seed":             seed if seed >= 0 else None,
-            }
-        else:  # sd15
-            model_version = REPLICATE_MODELS[model][control_mode]
-            inp = {
-                "image":           image_file,
-                "prompt":          prompt,
-                "n_prompt":        negative_prompt or "low quality, blurry",
-                "ddim_steps":      num_inference_steps,
-                "scale":           guidance_scale,
-                "eta":             0.0,
-                "seed":            seed if seed >= 0 else None,
-                "image_resolution": 512,
-            }
+        # Always use xai/grok-imagine-image
+        model_version = "xai/grok-imagine-image"
+        inp = {
+            "prompt":       prompt,
+            "image":        image_file,
+            "aspect_ratio": "1:1",
+        }
 
         logger.info(f"Calling Replicate: {model_version.split(':')[0]}")
 

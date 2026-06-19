@@ -1,0 +1,104 @@
+/*!*****************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[3]!./src/app/globals.css ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************/
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=Space+Mono&display=swap');
+
+:root {
+  /* Ultra-refined Minimal Palette: White, Black, and Warm Browns */
+  --bg-void: #0B0A09;        /* Deepest warm charcoal black */
+  --bg-deep: #12110F;        /* Rich dark espresso black */
+  --bg-surface: #1B1917;     /* Warm dark charcoal/brown */
+  --bg-raised: #262320;      /* Dark sand clay */
+  --bg-overlay: #332F2B;     /* Muted cocoa brown */
+
+  --accent-electric: #D4C3B3; /* Premium warm ivory / sand beige */
+  --accent-hot: #A88C74;      /* Mid-tone elegant camel brown */
+  --accent-gold: #C5A880;     /* Refined golden bronze */
+  --accent-cyan: #FAF9F6;     /* Alabaster off-white */
+  --accent-brown: #5E503F;    /* Rich coffee brown */
+
+  --text-primary: #FAF9F6;    /* Pure warm white */
+  --text-secondary: #C8C2BC;  /* Soft warm grey/beige */
+  --text-muted: #7E756C;      /* Muted sandy soil */
+
+  --border-subtle: rgba(212, 195, 179, 0.12); /* Subtle sand outline */
+  --border-glow: rgba(212, 195, 179, 0.25);
+
+  --font-display: 'Cormorant Garamond', serif;
+  --font-mono: 'Space Mono', monospace;
+  --font-sans: 'Inter', sans-serif;
+
+  --radius-sm: 2px; /* Very sharp, minimal corners */
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  --glow-green: 0 4px 20px rgba(212, 195, 179, 0.15);
+  --glow-pink: 0 4px 20px rgba(168, 140, 116, 0.15);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-void);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  min-height: 100vh;
+  letter-spacing: -0.01em;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--bg-raised); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-hot); }
+
+/* Selection */
+::selection {
+  background: rgba(212, 195, 179, 0.2);
+  color: var(--accent-cyan);
+}
+
+/* Utility */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+

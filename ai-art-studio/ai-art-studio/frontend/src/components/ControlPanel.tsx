@@ -312,38 +312,21 @@ export default function ControlPanel({ isGenerating, setIsGenerating, setGenerat
 
         {showAdvanced && (
           <div className={styles.advancedContent}>
-            {/* Model & ControlNet Mode */}
-            <div className={styles.row}>
-              <div className={styles.field}>
-                <label className={styles.label}>MODEL</label>
-                <select 
-                  className={styles.select} 
-                  value={model} 
-                  onChange={(e) => {
-                    setModel(e.target.value);
-                    setSelectedStyleId(''); // Deselect preset since we customized
-                  }}
-                >
-                  {MODELS.map((m) => (
-                    <option key={m.value} value={m.value}>{m.label}</option>
-                  ))}
-                </select>
-              </div>
-              <div className={styles.field}>
-                <label className={styles.label}>CONTROLNET</label>
-                <select 
-                  className={styles.select} 
-                  value={controlMode} 
-                  onChange={(e) => {
-                    setControlMode(e.target.value);
-                    setSelectedStyleId('');
-                  }}
-                >
-                  {CONTROLNET_MODES.map((m) => (
-                    <option key={m.value} value={m.value}>{m.label}</option>
-                  ))}
-                </select>
-              </div>
+            {/* ControlNet Mode */}
+            <div className={styles.fieldFull}>
+              <label className={styles.label}>CONTROLNET</label>
+              <select 
+                className={styles.select} 
+                value={controlMode} 
+                onChange={(e) => {
+                  setControlMode(e.target.value);
+                  setSelectedStyleId('');
+                }}
+              >
+                {CONTROLNET_MODES.map((m) => (
+                  <option key={m.value} value={m.value}>{m.label}</option>
+                ))}
+              </select>
             </div>
 
             {/* Prompt */}
