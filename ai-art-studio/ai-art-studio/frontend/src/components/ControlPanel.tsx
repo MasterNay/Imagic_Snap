@@ -42,11 +42,11 @@ const STYLE_PRESETS: StylePreset[] = [
     prompt: 'A retro comic book pop art illustration of the person in the input image. Bold black ink outlines, clean solid colors, halftone dot pattern background, vintage comic style, preserving their pose and facial structure.',
   },
   {
-    id: 'popart',
-    name: 'Pop Art',
-    nameTh: 'ป๊อปอาร์ต',
-    emoji: '🕶️',
-    prompt: 'An Andy Warhol style pop art screen print of the person in the input image. Flat high-contrast vector colors, clean outlines, iconic retro art style, preserving their pose and facial structure.',
+    id: 'pencil',
+    name: 'Pencil Art',
+    nameTh: 'ภาพวาดดินสอ',
+    emoji: '✏️',
+    prompt: 'Convert to pencil sketch with natural graphite lines, cross-hatching, and visible paper texture. Preserve the person’s pose and facial structure, with detailed shading and a monochrome look.',
   },
   {
     id: 'cyberpunk_subtle',
@@ -60,7 +60,7 @@ const STYLE_PRESETS: StylePreset[] = [
     name: 'Pixel Art',
     nameTh: 'ภาพพิกเซล',
     emoji: '👾',
-    prompt: 'A vibrant 16-bit retro pixel art portrait of the person in the input image. Distinct blocky pixel grid, retro game colors, clean aliased pixel shading, preserving their pose and facial structure.',
+    prompt: 'A low-resolution 8-bit retro game sprite of the person in the input image. Extremely pixelated with a distinct large blocky pixel grid, limited vibrant 16-color palette, retro arcade aesthetic, heavy dithering patterns, crisp jagged aliased edges, strictly simplifying all features into pixel blocks while maintaining the exact pose and features from the original image without distortion.',
   }
 ];
 
