@@ -78,6 +78,7 @@ class InferenceEngine:
         # Wrap image bytes in a file-like BytesIO object. 
         # The Replicate SDK automatically uploads file-like objects to their storage.
         image_file = io.BytesIO(image_bytes)
+        image_file.name = "input_image.jpg"  # Set name so Replicate uploads with .jpg extension instead of .bin
         image_file.seek(0)
 
         # Always use xai/grok-imagine-image
