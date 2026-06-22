@@ -5,11 +5,12 @@ import styles from './GeneratedCanvas.module.css';
 
 interface Props {
   generatedImage: string | null;
+  generatedImageUrl: string | null;
   isGenerating: boolean;
   jobId: string | null;
 }
 
-export default function GeneratedCanvas({ generatedImage, isGenerating, jobId }: Props) {
+export default function GeneratedCanvas({ generatedImage, generatedImageUrl, isGenerating, jobId }: Props) {
   const [progress, setProgress] = useState(0);
 
   // Fake progress animation during generation
@@ -61,6 +62,23 @@ export default function GeneratedCanvas({ generatedImage, isGenerating, jobId }:
             alt="AI Generated"
             className={styles.outputImage}
           />
+        )}
+
+        {/* QR Code Overlay for mobile download */}
+        {generatedImageUrl && !isGenerating && (
+          <div className={styles.qrOverlay}>
+            <div className={styles.qrContainer}>
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(generatedImageUrl)}`}
+                alt="Scan to Download"
+                className={styles.qrImage}
+              />
+              <div className={styles.qrText}>
+                <span>SCAN TO</span>
+                <strong>DOWNLOAD</strong>
+              </div>
+            </div>
+          </div>
         )}
 
         {/* Loading state */}

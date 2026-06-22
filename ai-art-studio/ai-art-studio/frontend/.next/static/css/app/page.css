@@ -411,6 +411,61 @@
   opacity: 0.4;
 }
 
+/* QR Code Overlay */
+.GeneratedCanvas_qrOverlay__AHApl {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10;
+  background: rgba(27, 25, 23, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  animation: GeneratedCanvas_fadeInUp__35gwH 0.4s ease;
+}
+
+.GeneratedCanvas_qrContainer__gkwdL {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.GeneratedCanvas_qrImage__jTUz5 {
+  width: 90px;
+  height: 90px;
+  border-radius: var(--radius-sm);
+  background: #FAF9F6;
+  padding: 4px;
+}
+
+.GeneratedCanvas_qrText__Rxas9 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-align: left;
+}
+
+.GeneratedCanvas_qrText__Rxas9 span {
+  color: var(--text-secondary);
+}
+
+.GeneratedCanvas_qrText__Rxas9 strong {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+}
+
 /*!**********************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[7].use[3]!./src/components/ControlPanel.module.css ***!
   \**********************************************************************************************************************************************************************************************************************************************************************************/

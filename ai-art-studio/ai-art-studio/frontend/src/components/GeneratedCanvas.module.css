@@ -187,3 +187,58 @@
   color: var(--text-muted);
   opacity: 0.4;
 }
+
+/* QR Code Overlay */
+.qrOverlay {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10;
+  background: rgba(27, 25, 23, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  animation: fadeInUp 0.4s ease;
+}
+
+.qrContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.qrImage {
+  width: 90px;
+  height: 90px;
+  border-radius: var(--radius-sm);
+  background: #FAF9F6;
+  padding: 4px;
+}
+
+.qrText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-align: left;
+}
+
+.qrText span {
+  color: var(--text-secondary);
+}
+
+.qrText strong {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+}

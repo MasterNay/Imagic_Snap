@@ -10,6 +10,7 @@ import styles from './page.module.css';
 export default function Home() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
   const [jobId, setJobId] = useState<string | null>(null);
 
   return (
@@ -36,6 +37,7 @@ export default function Home() {
             isGenerating={isGenerating}
             setIsGenerating={setIsGenerating}
             setGeneratedImage={setGeneratedImage}
+            setGeneratedImageUrl={setGeneratedImageUrl}
             setJobId={setJobId}
           />
         </aside>
@@ -44,6 +46,7 @@ export default function Home() {
         <section className={styles.canvas}>
           <GeneratedCanvas
             generatedImage={generatedImage}
+            generatedImageUrl={generatedImageUrl}
             isGenerating={isGenerating}
             jobId={jobId}
           />

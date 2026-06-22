@@ -8,6 +8,7 @@ interface Props {
   isGenerating: boolean;
   setIsGenerating: (v: boolean) => void;
   setGeneratedImage: (v: string | null) => void;
+  setGeneratedImageUrl: (v: string | null) => void;
   setJobId: (v: string | null) => void;
 }
 
@@ -64,7 +65,7 @@ const STYLE_PRESETS: StylePreset[] = [
   }
 ];
 
-export default function ControlPanel({ isGenerating, setIsGenerating, setGeneratedImage, setJobId }: Props) {
+export default function ControlPanel({ isGenerating, setIsGenerating, setGeneratedImage, setGeneratedImageUrl, setJobId }: Props) {
   const { capturedImage, frameData } = useCameraStore();
 
   const [selectedStyleId, setSelectedStyleId] = useState<string>('anime');
@@ -93,6 +94,7 @@ export default function ControlPanel({ isGenerating, setIsGenerating, setGenerat
 
     setIsGenerating(true);
     setJobId(null);
+    setGeneratedImageUrl(null);
 
     try {
       const res = await fetch(`${API_URL}/generate`, {
@@ -139,6 +141,7 @@ export default function ControlPanel({ isGenerating, setIsGenerating, setGenerat
 
         if (data.status === 'completed') {
           setGeneratedImage(`data:image/png;base64,${data.result_image}`);
+          setGeneratedImageUrl(data.result_url || null);
           setIsGenerating(false);
         } else if (data.status === 'failed') {
           console.error('Job failed:', data.error);

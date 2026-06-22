@@ -12,6 +12,15 @@ import os
 from contextlib import asynccontextmanager
 from typing import Optional
 
+# Load local .env file if present
+env_path = os.path.join(os.path.dirname(__file__), ".env")
+if os.path.exists(env_path):
+    with open(env_path) as f:
+        for line in f:
+            if line.strip() and not line.startswith("#") and "=" in line:
+                key, val = line.strip().split("=", 1)
+                os.environ[key.strip()] = val.strip().strip('"').strip("'")
+
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -77,6 +86,7 @@ class JobStatus(BaseModel):
     job_id: str
     status: str  # pending | running | completed | failed
     result_image: Optional[str] = None
+    result_url: Optional[str] = None
     error: Optional[str] = None
 
 
@@ -112,6 +122,7 @@ async def job_status(job_id: str):
         job_id=job_id,
         status=j["status"],
         result_image=j.get("result_image"),
+        result_url=j.get("result_url"),
         error=j.get("error"),
     )
 
@@ -139,7 +150,7 @@ async def run_inference(job_id: str, req: GenerateRequest):
         # Decode input image
         image_bytes = base64.b64decode(req.image)
 
-        result_bytes = await asyncio.to_thread(
+        result_bytes, result_url = await asyncio.to_thread(
             engine.generate,
             image_bytes=image_bytes,
             prompt=req.prompt,
@@ -155,6 +166,7 @@ async def run_inference(job_id: str, req: GenerateRequest):
         result_b64 = base64.b64encode(result_bytes).decode()
         jobs[job_id]["status"] = "completed"
         jobs[job_id]["result_image"] = result_b64
+        jobs[job_id]["result_url"] = result_url
         logger.info(f"[{job_id[:8]}] Completed ✓")
 
     except Exception as e:

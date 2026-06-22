@@ -114,4 +114,4 @@ class InferenceEngine:
         with urllib.request.urlopen(result_url) as resp:
             image_bytes_out = resp.read()
 
-        return image_bytes_out
+        return image_bytes_out, result_url
