@@ -85,6 +85,7 @@ class GenerateResponse(BaseModel):
 class JobStatus(BaseModel):
     job_id: str
     status: str  # pending | running | completed | failed
+    original_image: Optional[str] = None
     result_image: Optional[str] = None
     result_url: Optional[str] = None
     error: Optional[str] = None
@@ -105,7 +106,10 @@ async def health():
 @app.post("/generate", response_model=GenerateResponse)
 async def generate(req: GenerateRequest, background_tasks: BackgroundTasks):
     job_id = str(uuid.uuid4())
-    jobs[job_id] = {"status": "pending"}
+    jobs[job_id] = {
+        "status": "pending",
+        "original_image": req.image
+    }
 
     # Kick off background inference
     background_tasks.add_task(run_inference, job_id, req)
@@ -121,6 +125,7 @@ async def job_status(job_id: str):
     return JobStatus(
         job_id=job_id,
         status=j["status"],
+        original_image=j.get("original_image"),
         result_image=j.get("result_image"),
         result_url=j.get("result_url"),
         error=j.get("error"),

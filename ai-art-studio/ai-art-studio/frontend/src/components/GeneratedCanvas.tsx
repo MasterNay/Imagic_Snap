@@ -11,7 +11,15 @@ interface Props {
 }
 
 export default function GeneratedCanvas({ generatedImage, generatedImageUrl, isGenerating, jobId }: Props) {
+  const [downloadPageUrl, setDownloadPageUrl] = useState('');
   const [progress, setProgress] = useState(0);
+
+  // Generate the download page URL safely on the client side
+  useEffect(() => {
+    if (typeof window !== 'undefined' && jobId) {
+      setDownloadPageUrl(`${window.location.origin}/download?job_id=${jobId}`);
+    }
+  }, [jobId]);
 
   // Fake progress animation during generation
   useEffect(() => {
@@ -65,11 +73,11 @@ export default function GeneratedCanvas({ generatedImage, generatedImageUrl, isG
         )}
 
         {/* QR Code Overlay for mobile download */}
-        {generatedImageUrl && !isGenerating && (
+        {downloadPageUrl && !isGenerating && (
           <div className={styles.qrOverlay}>
             <div className={styles.qrContainer}>
               <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(generatedImageUrl)}`}
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(downloadPageUrl)}`}
                 alt="Scan to Download"
                 className={styles.qrImage}
               />
