@@ -26,7 +26,7 @@ const STYLE_PRESETS: StylePreset[] = [
     name: 'Anime Art',
     nameTh: 'ลายเส้นอนิเมะ',
     emoji: '🌸',
-    prompt: 'Transform the person in the input image into a beautiful anime art style illustration, Studio Ghibli style, clean line art, vibrant colors, detailed scenery in the background, preserving their pose and facial structure.',
+    prompt: 'Anime style, highly detailed.',
   },
   {
     id: 'watercolor',
@@ -50,11 +50,11 @@ const STYLE_PRESETS: StylePreset[] = [
     prompt: 'Convert to pencil sketch with natural graphite lines, cross-hatching, and visible paper texture. Preserve the person’s pose and facial structure, with detailed shading and a monochrome look.',
   },
   {
-    id: 'cyberpunk_subtle',
-    name: 'Cyberpunk',
-    nameTh: 'ไซเบอร์พังก์',
-    emoji: '🌆',
-    prompt: 'A cyberpunk theme rendering of the person in the input image. Keep their pose and facial structure, but render them with glowing neon light reflections, futuristic clothing, and a dark wet street background with neon signs.',
+    id: 'lowpoly',
+    name: 'Low Poly Art',
+    nameTh: 'โลว์โพลี',
+    emoji: '💠',
+    prompt: 'Low poly art style portrait, geometric, sharp edges, pastel colors, simple background.',
   },
   {
     id: 'pixel',
