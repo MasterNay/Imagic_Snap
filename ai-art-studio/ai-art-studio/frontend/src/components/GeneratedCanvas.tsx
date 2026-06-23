@@ -13,11 +13,14 @@ interface Props {
 export default function GeneratedCanvas({ generatedImage, generatedImageUrl, isGenerating, jobId }: Props) {
   const [downloadPageUrl, setDownloadPageUrl] = useState('');
   const [progress, setProgress] = useState(0);
+  const [qrLoaded, setQrLoaded] = useState(false);
+  const [qrExpanded, setQrExpanded] = useState(false);
 
   // Generate the download page URL safely on the client side
   useEffect(() => {
     if (typeof window !== 'undefined' && jobId) {
       setDownloadPageUrl(`${window.location.origin}/download?job_id=${jobId}`);
+      setQrLoaded(false); // Reset loading state for new job
     }
   }, [jobId]);
 
@@ -74,19 +77,54 @@ export default function GeneratedCanvas({ generatedImage, generatedImageUrl, isG
 
         {/* QR Code Overlay for mobile download */}
         {downloadPageUrl && !isGenerating && (
-          <div className={styles.qrOverlay}>
-            <div className={styles.qrContainer}>
-              <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(downloadPageUrl)}`}
-                alt="Scan to Download"
-                className={styles.qrImage}
-              />
-              <div className={styles.qrText}>
-                <span>SCAN TO</span>
-                <strong>DOWNLOAD</strong>
+          <>
+            <div 
+              className={styles.qrOverlay} 
+              onClick={() => setQrExpanded(true)}
+              title="คลิกเพื่อขยาย QR Code / Click to expand"
+            >
+              <div className={styles.qrContainer}>
+                {!qrLoaded && (
+                  <div className={styles.qrPlaceholder}>
+                    <span className={styles.qrPlaceholderSpinner} />
+                    <span>Loading QR...</span>
+                  </div>
+                )}
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(downloadPageUrl)}`}
+                  alt="Scan to Download"
+                  className={styles.qrImage}
+                  onLoad={() => setQrLoaded(true)}
+                  style={{ display: qrLoaded ? 'block' : 'none' }}
+                />
+                {qrLoaded && (
+                  <div className={styles.qrText}>
+                    <span>SCAN TO</span>
+                    <strong>DOWNLOAD</strong>
+                    <span className={styles.qrHint}>(🔍 Click to Zoom)</span>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
+
+            {/* Click to Zoom Lightbox Modal */}
+            {qrExpanded && (
+              <div className={styles.qrModalBackdrop} onClick={() => setQrExpanded(false)}>
+                <div className={styles.qrModalContent} onClick={(e) => e.stopPropagation()}>
+                  <button className={styles.qrModalClose} onClick={() => setQrExpanded(false)}>✕</button>
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(downloadPageUrl)}`}
+                    alt="Scan to Download"
+                    className={styles.qrModalImage}
+                  />
+                  <div className={styles.qrModalText}>
+                    <strong>SCAN TO DOWNLOAD</strong>
+                    <span>สแกนเพื่อดาวน์โหลดรูปภาพลงมือถือของคุณ</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         )}
 
         {/* Loading state */}
