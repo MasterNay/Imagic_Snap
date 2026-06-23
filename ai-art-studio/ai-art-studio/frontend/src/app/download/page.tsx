@@ -81,6 +81,15 @@ function DownloadPageContent() {
           <div className={styles.imageWrapper}>
             <img src={originalImage} alt="Original input" className={styles.image} />
           </div>
+          <div className={styles.cardActions}>
+            <a
+              href={originalImage}
+              download={`original-${jobId?.slice(0, 8)}.jpg`}
+              className={styles.downloadBtn}
+            >
+              DOWNLOAD ORIGINAL PHOTO
+            </a>
+          </div>
         </div>
       )}
 

@@ -188,21 +188,7 @@ export default function ControlPanel({ isGenerating, setIsGenerating, setGenerat
         })}
       </div>
 
-      {/* Custom Prompt Text Area */}
-      <div className={styles.fieldFull} style={{ marginTop: '8px' }}>
-        <label className={styles.label}>PROMPT / รายละเอียดคำสั่งภาพ</label>
-        <textarea
-          className={styles.textarea}
-          value={prompt}
-          onChange={(e) => {
-            setPrompt(e.target.value);
-            setSelectedStyleId(''); // Deselect preset since we customized
-          }}
-          rows={4}
-          placeholder="Describe what you want to generate..."
-          disabled={isGenerating}
-        />
-      </div>
+
 
       {/* Main Generate Button */}
       <div className={styles.actions}>
